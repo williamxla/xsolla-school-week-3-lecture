@@ -7,7 +7,7 @@ interface CartSidebarProps {
   onClose: () => void
   cartItems: CartItem[]
   totalPrice: number
-  onClearCart: () => void
+  clearCart: () => void
 }
 
 const formatPrice = (amount: number): string =>
@@ -18,9 +18,10 @@ export function CartSidebar({
   onClose,
   cartItems,
   totalPrice,
-  onClearCart,
+  clearCart,
 }: CartSidebarProps) {
   const [paying, setPaying] = useState(false)
+  const [error, setError] = useState('')
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   const showToast = (type: 'success' | 'error', message: string) => {
@@ -30,6 +31,25 @@ export function CartSidebar({
 
   const handlePay = async () => {
     // Lecture: Handle Payment
+    const payload = cartItems.map((ci) => {
+      return {
+        item_id: ci.item.id,
+        quantity: ci.quantity,
+        price: ci.item.price
+      }
+    })
+
+    try{
+      setPaying(true)
+      await createOrder(payload, totalPrice)
+      onClose()
+      clearCart()
+      showToast('success', 'Payment Success')
+    } catch (error: any) {
+      showToast('error', 'Payment failed, bring me my money!!!')
+    } finally {
+      setPaying(false)
+    }
   }
 
   return (

@@ -24,7 +24,7 @@ function App() {
   const [showCart, setShowCart] = useState(false)
   const [tokenEmail, setTokenEmail] = useState<string | null>(getTokenEmail)
   const { cartItems, addToCart, clearCart, totalItems, totalPrice } = useCart(items)
-  console.log(items)
+
   return (
     <div className="shop">
       <header className="shop__header">
@@ -104,7 +104,7 @@ function App() {
         onClose={() => setShowCart(false)}
         cartItems={cartItems}
         totalPrice={totalPrice}
-        onClearCart={clearCart}
+        clearCart={clearCart}
       />
     </div>
   )

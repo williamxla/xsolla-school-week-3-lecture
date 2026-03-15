@@ -24,11 +24,13 @@ export function useItems(): UseItemsResult {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await getItems()
-        setItems(response)
+        setLoading(true)
+        const data = await getItems();
+        setItems(data)
+      } catch (error: any){
+        setError(error.response.data.message || 'Loading items failed')
+      } finally {
         setLoading(false)
-      } catch (err: any) {
-        setError(err.response?.data?.message ?? 'Failed to fetch items.')
       }
     }
     fetchItems()
